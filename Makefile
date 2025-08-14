@@ -124,3 +124,33 @@ check-deps:
 	@which rpmbuild >/dev/null 2>&1 || echo "WARNING: rpmbuild not found (needed for RPM packaging)"
 	@which dpkg-buildpackage >/dev/null 2>&1 || echo "WARNING: dpkg-buildpackage not found (needed for DEB packaging)"
 	@which systemctl >/dev/null 2>&1 || echo "WARNING: systemctl not found (systemd not available)"
+
+
+# ---------------------------------------------------------------------------
+# Docker-based packaging
+# ---------------------------------------------------------------------------
+
+.PHONY: docker-rpm docker-deb
+
+docker-rpm:
+	@echo "Building RPM package inside AlmaLinux 9 container..."
+	docker run --rm -it \
+	    -v $(PWD):/src \
+	    -w /src \
+	    docker.io/almalinux:9 \
+	    bash -c 'set -e; \
+	        dnf install -y rpm-build rpmdevtools make; \
+	        make rpm'
+
+#	        dnf group install -y "Development Tools"; \
+
+docker-deb:
+	@echo "Building DEB package inside Debian container..."
+	docker run --rm -it \
+	    -v $(PWD):/src \
+	    -w /src \
+	    docker.io/debian:bookworm-slim \
+	    bash -c 'set -e; \
+	        apt-get update; \
+	        apt-get install -y debhelper devscripts make; \
+	        make deb'
