@@ -88,45 +88,68 @@ curl http://localhost:9868
 
 ## Metrics Summary
 
-The exporter collects the following categories of metrics:
+The exporter collects the following categories of metrics with consistent naming:
 
-### Cache Metrics
-- `cvmfs_cached_bytes` - Currently cached data size
-- `cvmfs_pinned_bytes` - Pinned cache data size
-- `cvmfs_total_cache_size_bytes` - Configured cache limit
-- `cvmfs_physical_cache_size_bytes` - Physical cache volume size
-- `cvmfs_physical_cache_avail_bytes` - Available cache space
-- `cvmfs_hitrate` - Cache hit rate percentage
-- `cvmfs_ncleanup24` - Cache cleanups in last 24 hours
+### Cache Metrics (`cvmfs_cache_*`)
+- `cvmfs_cache_cached_bytes` - Currently cached data size
+- `cvmfs_cache_pinned_bytes` - Pinned cache data size
+- `cvmfs_cache_total_size_bytes` - Configured cache limit
+- `cvmfs_cache_physical_size_bytes` - Physical cache volume size
+- `cvmfs_cache_physical_avail_bytes` - Available cache space
+- `cvmfs_cache_hitrate` - Cache hit rate percentage
+- `cvmfs_cache_ncleanup24` - Cache cleanups in last 24 hours
+- `cvmfs_cache_mode` - Cache mode (0=unknown, 1=read-write, 2=read-only)
 
-### Network & Download Metrics
-- `cvmfs_rx_total` - Total bytes downloaded since mount
-- `cvmfs_ndownload_total` - Total files downloaded since mount
-- `cvmfs_speed` - Average download speed
-- `cvmfs_proxy` - Available proxy servers
-- `cvmfs_active_proxy` - Currently active proxy
-- `cvmfs_timeout` - Proxy connection timeout
-- `cvmfs_timeout_direct` - Direct connection timeout
+### Network & Download Metrics (`cvmfs_net_*`)
+- `cvmfs_net_rx_total` - Total bytes downloaded since mount
+- `cvmfs_net_ndownload_total` - Total files downloaded since mount
+- `cvmfs_net_speed` - Average download speed
+- `cvmfs_net_proxy` - Available proxy servers
+- `cvmfs_net_active_proxy` - Currently active proxy
+- `cvmfs_net_timeout` - Proxy connection timeout
+- `cvmfs_net_timeout_direct` - Direct connection timeout
 
-### Repository Status Metrics
+### Repository Status Metrics (`cvmfs_repo_*`)
 - `cvmfs_repo` - Repository version and revision information
-- `cvmfs_uptime_seconds` - Time since repository mount
-- `cvmfs_mount_epoch_timestamp` - Repository mount timestamp
+- `cvmfs_repo_uptime_seconds` - Time since repository mount
+- `cvmfs_repo_mount_epoch_timestamp` - Repository mount timestamp
 - `cvmfs_repo_expires_seconds` - Root catalog expiration time
+- `cvmfs_repo_version` - Numeric repository version for easier querying
+- `cvmfs_repo_revision` - Repository revision number
+- `cvmfs_repo_nclg` - Number of loaded nested catalogs
 
-### System Resource Metrics
-- `cvmfs_cpu_user_total` - CPU time in userspace
-- `cvmfs_cpu_system_total` - CPU time in kernel space
-- `cvmfs_maxfd` - Maximum file descriptors available
-- `cvmfs_usedfd` - Currently used file descriptors
-- `cvmfs_ndiropen` - Number of open directories
-- `cvmfs_pid` - CVMFS process ID
+### System Resource Metrics (`cvmfs_sys_*`)
+- `cvmfs_sys_cpu_user_total` - CPU time in userspace
+- `cvmfs_sys_cpu_system_total` - CPU time in kernel space
+- `cvmfs_sys_maxfd` - Maximum file descriptors available
+- `cvmfs_sys_usedfd` - Currently used file descriptors
+- `cvmfs_sys_useddirp` - File descriptors issued to clients
+- `cvmfs_sys_ndiropen` - Number of open directories
+- `cvmfs_sys_pid` - CVMFS process ID
+- `cvmfs_sys_inode_max` - Highest possible inode number
+- `cvmfs_sys_memory_usage_bytes` - CVMFS process memory usage
+- `cvmfs_sys_nioerr_total` - Total I/O errors encountered
+- `cvmfs_sys_timestamp_last_ioerr` - Timestamp of last I/O error
+- `cvmfs_sys_drainout_mode` - Drainout mode status
+- `cvmfs_sys_maintenance_mode` - Maintenance mode status
+- `cvmfs_sys_nfs_mode` - NFS mode enabled status
 
-### Error & Monitoring Metrics
-- `cvmfs_nioerr_total` - Total I/O errors encountered
-- `cvmfs_timestamp_last_ioerr` - Timestamp of last I/O error
-- `cvmfs_nclg` - Number of loaded nested catalogs
-- `cvmfs_inode_max` - Highest possible inode number
+### Internal Affairs Metrics (`cvmfs_internal_*`)
+- `cvmfs_internal_pathstring_*` - PathString statistics
+- `cvmfs_internal_namestring_*` - NameString statistics
+- `cvmfs_internal_linkstring_*` - LinkString statistics
+- `cvmfs_internal_inode_tracker_*` - Inode tracker statistics
+- `cvmfs_internal_dentry_tracker_*` - Dentry tracker statistics
+- `cvmfs_internal_page_cache_tracker_*` - Page cache tracker statistics
+- `cvmfs_internal_sqlite_*` - SQLite internal statistics
+
+## Version Compatibility
+
+The script automatically detects the CVMFS version and adapts accordingly:
+
+- **CVMFS 2.13.2+**: Uses the native `cvmfs_talk metrics prometheus` command with consistent metric naming
+- **CVMFS 2.13.2 (exact)**: Applies postprocessing to rename metrics for consistency
+- **Older versions**: Uses legacy extended attribute collection with consistent naming
 
 ## Configuration
 
