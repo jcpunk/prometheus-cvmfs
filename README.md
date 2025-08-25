@@ -19,13 +19,18 @@ The prometheus-cvmfs-exporter provides detailed insights into CVMFS client perfo
 
 **RPM-based systems (RHEL, CentOS, AlmaLinux, Fedora):**
 ```bash
-sudo rpm -ivh prometheus-cvmfs-exporter-1.0.0-1.el9.noarch.rpm
+sudo yum install -y https://cvmrepo.s3.cern.ch/cvmrepo/yum/cvmfs-release-latest.noarch.rpm
+sudo yum install -y prometheus-cvmfs-exporter
 sudo systemctl enable --now cvmfs-client-prometheus.socket
 ```
 
 **DEB-based systems (Debian, Ubuntu):**
 ```bash
-sudo dpkg -i prometheus-cvmfs-exporter_1.0.0-1_all.deb
+wget https://cvmrepo.s3.cern.ch/cvmrepo/apt/cvmfs-release-latest_all.deb
+sudo dpkg -i cvmfs-release-latest_all.deb
+rm -f cvmfs-release-latest_all.deb
+sudo apt-get -y update
+sudo apt-get -y install prometheus-cvmfs-exporter
 sudo systemctl enable --now cvmfs-client-prometheus.socket
 ```
 
