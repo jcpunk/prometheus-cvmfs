@@ -49,15 +49,7 @@ sudo systemctl enable --now cvmfs-client-prometheus.socket
 
 ### Command Line Options
 
-```bash
-/usr/libexec/cvmfs/cvmfs-prometheus.sh [OPTIONS]
-
-Options:
-  -h, --help                    Show help message
-  --http                        Add HTTP protocol header to output
-  --non-standard-mountpoints    Use cvmfs_config status instead of findmnt
-                               for repository discovery
-```
+Arguments are documented under the `--help` switch for `/usr/libexec/cvmfs/cvmfs-prometheus.sh`
 
 ### Usage Examples
 
@@ -74,6 +66,11 @@ Options:
 **Non-standard mountpoints:**
 ```bash
 /usr/libexec/cvmfs/cvmfs-prometheus.sh --non-standard-mountpoints
+```
+
+**For node-exporter text collector:**
+```bash
+/usr/libexec/cvmfs/cvmfs-prometheus.sh --timestamp > /path/to/text-collector/cvmfs.prom
 ```
 
 ### Systemd Service
